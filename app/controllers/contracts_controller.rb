@@ -1,6 +1,11 @@
 class ContractsController < ApplicationController
   before_action :set_contract, only: [:show, :edit, :update, :destroy]
 
+  def initialize
+    super
+    @@repo = MetaComet::Repository.new("Contract")
+  end
+
   # GET /contracts
   # GET /contracts.json
   def index
@@ -14,7 +19,7 @@ class ContractsController < ApplicationController
 
   # GET /contracts/new
   def new
-    contract = Contract.new
+    contract = @@repo.new
     render "contracts/new", :locals => {:contract => contract}
   end
 
@@ -28,26 +33,17 @@ class ContractsController < ApplicationController
     begin
       service = ContractServices.new()
       contract = service.create_contract(contract_params)
-    rescue ContractServices::ValidationError
-      puts ContractServices::ValidationError.@model.errors
-    end
 
-    respond_to do |format|
-      if @contract.save
-        format.html { redirect_to @contract, notice: 'Contract was successfully created.' }
+      respond_to do |format|
+        format.html { redirect_to contract_path(contract.id), notice: 'Contract was successfully created.' }
         format.json { render :show, status: :created, location: @contract }
-      else
-        format.html { render :new }
-        format.json { render json: @contract.errors, status: :unprocessable_entity }
       end
-    end
-  end
 
-  def validation_issues(exception)
-    respond_to do |format|
-      puts exception
-      format.html { render "contracts/new", :locals => {:contract => Contract.new} }
-      format.json { render json: contract.errors, status: :unprocessable_entity }
+    rescue ContractServices::ValidationError => error
+      respond_to do |format|
+        format.html { render "contracts/new", :locals => {:contract => error.model} }
+        format.json { render json: error, status: :unprocessable_entity }
+      end
     end
   end
 
@@ -76,13 +72,13 @@ class ContractsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_contract
-      @contract = Contract.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_contract
+    @contract = Contract.find(params[:id])
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def contract_params
-      params.require(:contract).permit(:name)
-    end
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def contract_params
+    params.require(:contract).permit(:name)
+  end
 end

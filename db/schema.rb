@@ -19,4 +19,6 @@ ActiveRecord::Schema.define(version: 20150113153551) do
     t.datetime "updated_at"
   end
 
+  add_index "contracts", ["name"], name: "index_contracts_on_name", unique: true
+
 end

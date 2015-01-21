@@ -1,3 +1,9 @@
+GIT
+  remote: https://github.com/dmarlin/DDD.git
+  revision: d0d5ff3e7e66069a9b28c7ed13623360921ccdad
+  specs:
+    repository (1.0.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -52,6 +58,8 @@ GEM
     mime-types (2.4.3)
     minitest (5.5.1)
     multi_json (1.10.1)
+    protected_attributes (1.0.8)
+      activemodel (>= 4.0.1, < 5.0)
     rack (1.5.2)
     rack-test (0.6.3)
       rack (>= 1.0)
@@ -112,7 +120,9 @@ DEPENDENCIES
   coffee-rails (~> 4.0.0)
   jbuilder (~> 2.0)
   jquery-rails
+  protected_attributes
   rails (= 4.1.7.1)
+  repository!
   sass-rails (~> 4.0.3)
   sdoc (~> 0.4.0)
   sqlite3

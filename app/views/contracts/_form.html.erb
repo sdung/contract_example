@@ -1,21 +1,27 @@
-<%= form_for(contract) do |f| %>
-  <% if contract.errors.any? %>
+<% if params[:action] == 'edit' %>
+    <%= form_tag(contract_path(contract), method: :put) %>
+<% else %>
+    <%= form_tag(contracts_path, method: :post) %>
+<% end %>
+
+<% if contract.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(contract.errors.count, "error") %> prohibited this contract from being saved:</h2>
 
       <ul>
-      <% contract.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
+        <% contract.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+        <% end %>
       </ul>
     </div>
-  <% end %>
-
-  <div class="field">
-    <%= f.label :name %><br>
-    <%= f.text_field :name %>
-  </div>
-  <div class="actions">
-    <%= f.submit %>
-  </div>
 <% end %>
+
+<div class="field">
+  <%= label_tag :name %><br>
+  <%= text_field_tag "contract[name]", contract.name %>
+</div>
+
+<div class="actions">
+  <%= submit_tag %>
+</div>
+
