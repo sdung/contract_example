@@ -22,7 +22,7 @@ module ContractExample
 
     # Custom directories with classes and modules you want to be autoloadable.
     # config.autoload_paths += %W(#{config.root}/extras)
-    config.autoload_paths += %W(#{config.root}/app/business/**/)
-    config.autoload_paths += %W(#{config.root}/app/services/**/)
+    config.autoload_paths += Dir["#{config.root}/app/business/**/"]
+    config.autoload_paths += Dir["#{config.root}/app/services/**/"]
   end
 end
