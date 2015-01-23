@@ -1,5 +1,5 @@
 <% if params[:action] == 'edit' %>
-    <%= form_tag(contract_path(contract), method: :put) %>
+    <%= form_tag(contract_path(contract.id), method: :put) %>
 <% else %>
     <%= form_tag(contracts_path, method: :post) %>
 <% end %>

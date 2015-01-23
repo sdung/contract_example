@@ -9,12 +9,12 @@
   </thead>
 
   <tbody>
-    <% @contracts.each do |contract| %>
+    <% contracts.each do |contract| %>
       <tr>
         <td><%= contract.name %></td>
-        <td><%= link_to 'Show', contract %></td>
-        <td><%= link_to 'Edit', edit_contract_path(contract) %></td>
-        <td><%= link_to 'Destroy', contract, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to 'Show', contract_path(contract.id) %></td>
+        <td><%= link_to 'Edit', edit_contract_path(contract.id) %></td>
+        <td><%= link_to 'Destroy', contract_path(contract.id), method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>
