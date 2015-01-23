@@ -10,7 +10,7 @@ class Contract_Model
   validates :name, :presence => true
 
   def initialize(param = nil)
-    super (param)
+    super(param)
   end
 
    def record_not_unique

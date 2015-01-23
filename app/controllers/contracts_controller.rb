@@ -18,11 +18,17 @@ class ContractsController < ApplicationController
   # GET /contracts/1
   # GET /contracts/1.json
   def show
-    contract = @@service.find(params[:id])
+    begin
+      contract = @@service.find(params[:id])
 
-    respond_to do |format|
-      format.html { render "contracts/show", :locals => {:contract => contract} }
-      format.json { render json: contract }
+      respond_to do |format|
+        format.html { render "contracts/show", :locals => {:contract => contract} }
+        format.json { render json: contract }
+      end
+    rescue ActiveRecord::RecordNotFound => error
+      respond_to do |format|
+        format.html { redirect_to contracts_path, alert: 'Contract was not found.' }
+      end
     end
   end
 
@@ -38,11 +44,16 @@ class ContractsController < ApplicationController
 
   # GET /contracts/1/edit
   def edit
-    contract = @@service.find(params[:id])
-    respond_to do |format|
-      format.html { render "contracts/edit", :locals => {:contract => contract} }
+    begin
+      contract = @@service.find(params[:id])
+      respond_to do |format|
+        format.html { render "contracts/edit", :locals => {:contract => contract} }
+      end
+    rescue ActiveRecord::RecordNotFound
+      respond_to do |format|
+        format.html { redirect_to contracts_path, alert: 'Contract was not found.' }
+      end
     end
-
   end
 
   # POST /contracts
@@ -66,10 +77,14 @@ class ContractsController < ApplicationController
   # PATCH/PUT /contracts/1.json
   def update
     begin
-      contract = @@service.update_contract(contract, contract_params)
+      contract = @@service.update_contract(params[:id], contract_params)
       respond_to do |format|
         format.html { redirect_to contract_path(contract.id), notice: 'Contract was successfully updated.' }
         format.json { head :no_content }
+      end
+    rescue ActiveRecord::RecordNotFound
+      respond_to do |format|
+        format.html { redirect_to contracts_path, alert: 'Contract was not found.' }
       end
     rescue ContractServices::ValidationError => error
       respond_to do |format|
@@ -82,10 +97,16 @@ class ContractsController < ApplicationController
   # DELETE /contracts/1
   # DELETE /contracts/1.json
   def destroy
-    contract = @@service.delete_contract(params[:id])
-    respond_to do |format|
-      format.html { redirect_to contracts_url, notice: 'Contract was successfully destroyed.' }
-      format.json { head :no_content }
+    begin
+      @@service.delete_contract(params[:id])
+      respond_to do |format|
+        format.html { redirect_to contracts_url, notice: 'Contract was successfully destroyed.' }
+        format.json { head :no_content }
+      end
+    rescue ActiveRecord::RecordNotFound
+      respond_to do |format|
+        format.html { redirect_to contracts_path, alert: 'Contract was not found.' }
+      end
     end
   end
 

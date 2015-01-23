@@ -1,18 +1,6 @@
 class ContractServices < AbstractServices
   def initialize
-    @@repo = MetaComet::Repository.new("Contract")
-  end
-
-  def all
-    @@repo.all
-  end
-
-  def find(id)
-    @@repo.find(id)
-  end
-
-  def dummy
-    @@repo.new
+    super("Contract")
   end
 
   def create_contract(params)
@@ -27,8 +15,9 @@ class ContractServices < AbstractServices
     contract
   end
 
-  def update_contract(contract, params)
+  def update_contract(id, params)
     begin
+      contract = @@repo.find(id)
       contract = @@repo.update(contract.id, params)
     rescue ActiveRecord::RecordNotUnique
       contract = @@repo.new(params)
