@@ -1,3 +1,5 @@
+require 'repository'
+
 class ContractsController < ApplicationController
   def initialize
     super
@@ -25,11 +27,13 @@ class ContractsController < ApplicationController
         format.html { render "contracts/show", :locals => {:contract => contract} }
         format.json { render json: contract }
       end
-    rescue ActiveRecord::RecordNotFound => error
+
+    rescue => error
       respond_to do |format|
-        format.html { redirect_to contracts_path, alert: 'Contract was not found.' }
+        format.html { redirect_to contracts_path, alert: error.message }
       end
     end
+
   end
 
   # GET /contracts/new
@@ -40,6 +44,7 @@ class ContractsController < ApplicationController
       format.html { render "contracts/new", :locals => {:contract => contract} }
       format.json { render json: contract, status: :created, location: contract }
     end
+
   end
 
   # GET /contracts/1/edit
@@ -49,18 +54,20 @@ class ContractsController < ApplicationController
       respond_to do |format|
         format.html { render "contracts/edit", :locals => {:contract => contract} }
       end
-    rescue ActiveRecord::RecordNotFound
+
+    rescue => error
       respond_to do |format|
-        format.html { redirect_to contracts_path, alert: 'Contract was not found.' }
+        format.html { redirect_to contracts_path, alert: error.message }
       end
     end
+
   end
 
   # POST /contracts
   # POST /contracts.json
   def create
     begin
-      contract = @@service.create_contract(contract_params)
+      contract = @@service.create(contract_params)
       respond_to do |format|
         format.html { redirect_to contract_path(contract.id), notice: 'Contract was successfully created.' }
         format.json { render json: contract, status: :created, location: contract }
@@ -70,26 +77,31 @@ class ContractsController < ApplicationController
         format.html { render "contracts/new", :locals => {:contract => error.model} }
         format.json { render json: contract.errors, status: :unprocessable_entity }
       end
+    rescue => error
+      respond_to do |format|
+        format.html { redirect_to contracts_path, alert: error.message }
+      end
     end
+
   end
 
   # PATCH/PUT /contracts/1
   # PATCH/PUT /contracts/1.json
   def update
     begin
-      contract = @@service.update_contract(params[:id], contract_params)
+      contract = @@service.update(params[:id], contract_params)
       respond_to do |format|
         format.html { redirect_to contract_path(contract.id), notice: 'Contract was successfully updated.' }
         format.json { head :no_content }
-      end
-    rescue ActiveRecord::RecordNotFound
-      respond_to do |format|
-        format.html { redirect_to contracts_path, alert: 'Contract was not found.' }
       end
     rescue ContractServices::ValidationError => error
       respond_to do |format|
         format.html { render "contracts/new", :locals => {:contract => error.model} }
         format.json { render json: contract.errors, status: :unprocessable_entity }
+      end
+    rescue => error
+      respond_to do |format|
+        format.html { redirect_to contracts_path, alert: error.message }
       end
     end
   end
@@ -98,16 +110,18 @@ class ContractsController < ApplicationController
   # DELETE /contracts/1.json
   def destroy
     begin
-      @@service.delete_contract(params[:id])
+      @@service.delete(params[:id])
       respond_to do |format|
         format.html { redirect_to contracts_url, notice: 'Contract was successfully destroyed.' }
         format.json { head :no_content }
       end
-    rescue ActiveRecord::RecordNotFound
+
+    rescue => error
       respond_to do |format|
-        format.html { redirect_to contracts_path, alert: 'Contract was not found.' }
+        format.html { redirect_to contracts_path, alert: error.message }
       end
     end
+
   end
 
   private

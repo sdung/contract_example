@@ -40,8 +40,14 @@ gem 'protected_attributes'
 gem 'tzinfo', '1.2.2'
 gem 'tzinfo-data', platforms: [:x64_mingw,:mingw, :mswin]
 
-gem "repository", git: 'https://github.com/dmarlin/DDD.git'
+# gem "repository", git: 'https://github.com/dmarlin/DDD.git'
+gem "repository", :path => "/Sites/DDD"
 
 group :development, :test do
   gem 'rspec-rails'
 end
+
+group :test do
+  gem "factory_girl_rails"
+end
+
