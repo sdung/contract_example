@@ -22,7 +22,8 @@ class ContractServices < AbstractServices
     rescue ActiveRecord::RecordNotUnique
       contract = @@repo.new(params)
       contract.record_not_unique
-      raise ValidationError.new(contract)
+
+
     end
     raise ValidationError.new(contract) if !contract.valid? || contract.errors.any?
     contract
